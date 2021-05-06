@@ -7,12 +7,16 @@ public class CoffeeMachine : MonoBehaviour
     public GameObject popup;
     public Player player;
 
+    private void Start()
+    {
+        popup.SetActive(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
         {
             popup.SetActive(true);
-            player.OnApproachCoffeeMachine();
         }
     }
 
@@ -21,7 +25,6 @@ public class CoffeeMachine : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             popup.SetActive(false);
-            player.OnLeaveCoffeeMachine();
         }
     }
 }

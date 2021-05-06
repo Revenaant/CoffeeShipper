@@ -9,7 +9,10 @@ public class Player : MonoBehaviour
     private Vector3 velocity;
     private int coffeeCount;
     public int maxCoffee = 5;
+
     private bool nearCoffeeMachine = false;
+    private bool nearStudent = false;
+    private Student nearbyStudent;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +52,11 @@ public class Player : MonoBehaviour
         {
             GrabCoffee();
         }
+
+        if(nearStudent && Input.GetKeyDown(KeyCode.E))
+        {
+            GiveCoffee(nearbyStudent);
+        }
     }
 
     private void Move()
@@ -64,13 +72,37 @@ public class Player : MonoBehaviour
         coffeeCount = maxCoffee;
     }
 
-    public void OnApproachCoffeeMachine()
+    public void GiveCoffee(Student student)
     {
-        nearCoffeeMachine = true;
+        if(coffeeCount > 0 && !student.hasCoffee)
+        {
+            student.ReceiveCoffee();
+            coffeeCount--;
+        }
     }
 
-    public void OnLeaveCoffeeMachine()
+    private void OnTriggerEnter(Collider other)
     {
-        nearCoffeeMachine = false;
+        if(other.gameObject.tag == "Coffee Machine")
+        {
+            nearCoffeeMachine = true;
+        }
+        else if(other.gameObject.tag == "Student")
+        {
+            nearbyStudent = other.GetComponent<Student>();
+            nearStudent = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Coffee Machine")
+        {
+            nearCoffeeMachine = false;
+        }
+        else if (other.gameObject.tag == "Student")
+        {
+            nearStudent = false;
+        }
     }
 }
