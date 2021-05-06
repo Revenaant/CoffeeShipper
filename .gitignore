@@ -1,5 +1,8 @@
 /[Ll]ibrary/
 /[Tt]emp/
+/[Ll]ogs/
+/CoffeeShipper/[Ll]ibrary/
+/CoffeeShipper/[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
@@ -29,6 +32,10 @@ ExportedObj/
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+# Specifc file that doesn't want to get ignored
+/CoffeeShipper/[Ll]ogs/shadercompiler-UnityShaderCompiler.exe0.log
+[Ll]ogs/shadercompiler-UnityShaderCompiler.exe0.log
 
 # Builds
 *.apk
@@ -68,3 +75,5 @@ Assets/Plugins/Editor.meta
 
 # This file is ignored since it changes value depending on the platform Unity chooses.
 ProjectSettings/UnityConnectSettings.asset
+CoffeeShipper/Library
+CoffeeShipper/Logs
