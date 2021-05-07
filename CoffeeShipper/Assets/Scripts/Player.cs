@@ -5,11 +5,15 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public CharacterController charController;
+    public GameObject model;
+    public GameObject noiseArea;
+    public float noiseSensitivity;
+
     public float moveSpeed;
     private Vector3 velocity;
     public Vector3 gravity;
 
-    private int coffeeCount;
+    public int coffeeCount;
     public int maxCoffee = 5;
 
     private bool nearCoffeeMachine = false;
@@ -19,7 +23,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        velocity = new Vector3(0, 0, 0);
+
     }
 
     // Update is called once per frame
@@ -27,6 +31,11 @@ public class Player : MonoBehaviour
     {
         CheckInput();
         Move();
+
+        float soundRadius = velocity.magnitude * noiseSensitivity;
+        noiseArea.transform.localScale = new Vector3(soundRadius, soundRadius, soundRadius);
+
+        model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
 
         Debug.Log("Coffee: " + coffeeCount);
     }
@@ -79,6 +88,14 @@ public class Player : MonoBehaviour
         if(coffeeCount > 0 && !student.hasCoffee)
         {
             student.ReceiveCoffee();
+            coffeeCount--;
+        }
+    }
+
+    public void LoseCoffee()
+    {
+        if(coffeeCount > 0)
+        {
             coffeeCount--;
         }
     }
