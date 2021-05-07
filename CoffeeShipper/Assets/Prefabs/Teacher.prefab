@@ -226,6 +226,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  agent: {fileID: 1054001609}
+  moveSpeed: 2
+  patrolStart: {x: -1.818, y: 0.5, z: -45.41}
+  patrolEnd: {x: 11.75, y: 0.5, z: -36.31}
+  viewAngle: 50
+  viewDistance: 5
+  coffeeCooldown: 10
 --- !u!54 &1054001607
 Rigidbody:
   m_ObjectHideFlags: 0
