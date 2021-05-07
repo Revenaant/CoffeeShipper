@@ -115,7 +115,7 @@ public class Teacher : MonoBehaviour
 
     private void UpdatePlayerDetection()
     {
-        if (canHearPlayer || canSeePlayer)
+        if ((canHearPlayer || canSeePlayer) && player.coffeeCount > 0)
             followPlayer = true;
         else
             followPlayer = false;

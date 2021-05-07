@@ -22,9 +22,12 @@ public class Player : MonoBehaviour
     private bool nearStudent = false;
     private Student nearbyStudent;
 
+    private Vector3 oldPosition;
+
     private void Start()
     {
         maxCoffee = coffeeCups.Count;
+        oldPosition = transform.position;
         UpdateCoffeeCups();
     }
 
@@ -34,7 +37,7 @@ public class Player : MonoBehaviour
         CheckInput();
         Move();
 
-        float soundRadius = velocity.magnitude * noiseSensitivity;
+        float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
         noiseArea.transform.localScale = new Vector3(soundRadius, soundRadius, soundRadius);
 
         model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
@@ -80,6 +83,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
+        oldPosition = transform.position;
         charController.Move(velocity + gravity);
 
         velocity *= 0.99f;
