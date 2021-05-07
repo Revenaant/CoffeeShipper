@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
     private Student nearbyStudent;
 
     private Vector3 oldPosition;
+    public static bool isPaused;
+    private  float timeWhenPaused;
+    public float pauseTime;
 
     private void Start()
     {
@@ -34,15 +37,21 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckInput();
-        Move();
+        if (!isPaused)
+        {
+            CheckInput();
+            Move();
 
-        float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
-        noiseArea.transform.localScale = new Vector3(soundRadius, soundRadius, soundRadius);
+            float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
+            noiseArea.transform.localScale = new Vector3(soundRadius, soundRadius, soundRadius);
 
-        model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
+            model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
+        }
 
-        Debug.Log("Coffee: " + coffeeCount);
+        if(isPaused && Time.time > timeWhenPaused + pauseTime)
+        {
+            isPaused = false;
+        }
     }
 
     private void CheckInput()
@@ -127,6 +136,12 @@ public class Player : MonoBehaviour
                 coffeeCups[i].SetActive(false);
             }
         }
+    }
+
+    public void Pause()
+    {
+        isPaused = true;
+        timeWhenPaused = Time.time;
     }
 
     private void OnTriggerEnter(Collider other)
