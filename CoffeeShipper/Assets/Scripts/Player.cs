@@ -42,22 +42,28 @@ public class Player : MonoBehaviour
 
     private void CheckInput()
     {
+        Vector3 newVelocity = new Vector3(0, 0, 0);
+
         if (Input.GetKey(KeyCode.W))
         {
-            velocity += new Vector3(0, 0, moveSpeed);
+            newVelocity += new Vector3(0, 0, moveSpeed);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            velocity += new Vector3(0, 0, -moveSpeed);
+            newVelocity += new Vector3(0, 0, -moveSpeed);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            velocity += new Vector3(-moveSpeed, 0, 0);
+            newVelocity += new Vector3(-moveSpeed, 0, 0);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            velocity += new Vector3(moveSpeed, 0, 0);
+            newVelocity += new Vector3(moveSpeed, 0, 0);
         }
+
+        newVelocity.Normalize();
+        newVelocity *= moveSpeed;
+        velocity += newVelocity;
 
         if (nearCoffeeMachine && Input.GetKeyDown(KeyCode.E))
         {

@@ -5,6 +5,8 @@ public class Teacher : MonoBehaviour
 {
     public Player player;
     public NavMeshAgent agent;
+    public GameObject exclamationMark;
+    public GameObject coffee;
 
     public int moveSpeed;
     public Vector3 patrolStart;
@@ -18,15 +20,31 @@ public class Teacher : MonoBehaviour
     public float coffeeCooldown;
     private bool hasCoffee = false;
 
+    private bool canHearPlayer = false;
+    private bool canSeePlayer = false;
+
     // Start is called before the first frame update
     void Start()
     {
         agent.speed = moveSpeed;
         timeOfLastCoffee = 0;
+        exclamationMark.SetActive(false);
+        coffee.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
+    {
+        CheckLineOfSight();
+        DrinkCoffee();
+        UpdatePlayerDetection();
+        UpdateAgentDestination();
+
+        coffee.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+        exclamationMark.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+    }
+
+    private void CheckLineOfSight()
     {
         if (player.coffeeCount > 0)
         {
@@ -36,23 +54,29 @@ public class Teacher : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, angleToPlayer, out hit, viewDistance))
                 {
-                    if (hit.collider.gameObject.Equals(player.gameObject))
+                    if (hit.collider.gameObject.tag == "Player")
                     {
-                        DetectPlayer();
+                        canSeePlayer = true;
                     }
                     else
                     {
-                        followPlayer = false;
+                        canSeePlayer = false;
                     }
                 }
             }
         }
+    }
 
+    private void DrinkCoffee()
+    {
         if (Time.time > timeOfLastCoffee + coffeeCooldown && hasCoffee)
         {
             FinishCoffee();
         }
+    }
 
+    private void UpdateAgentDestination()
+    {
         if (followPlayer && !hasCoffee)
         {
             agent.SetDestination(player.transform.position);
@@ -75,9 +99,18 @@ public class Teacher : MonoBehaviour
         }
     }
 
-    private void DetectPlayer()
+    private void UpdatePlayerDetection()
     {
-        followPlayer = true;
+        if (canHearPlayer || canSeePlayer)
+        {
+            followPlayer = true;
+            exclamationMark.SetActive(true);
+        }
+        else
+        {
+            followPlayer = false;
+            exclamationMark.SetActive(false);
+        }
         Debug.Log("Found!");
     }
 
@@ -87,12 +120,14 @@ public class Teacher : MonoBehaviour
         player.LoseCoffee();
         timeOfLastCoffee = Time.time;
         hasCoffee = true;
+        coffee.SetActive(true);
     }
 
     private void FinishCoffee()
     {
         Debug.Log("Finished");
         hasCoffee = false;
+        coffee.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -104,12 +139,20 @@ public class Teacher : MonoBehaviour
                 GetCoffee();
             }
         }
-        if(other.gameObject.tag == "Sound")
+        if (other.gameObject.tag == "Sound")
         {
-            if(player.coffeeCount > 0 && !hasCoffee)
+            if (player.coffeeCount > 0 && !hasCoffee)
             {
-                DetectPlayer();
+                canHearPlayer = true;
             }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Sound")
+        {
+            canHearPlayer = false;
         }
     }
 }

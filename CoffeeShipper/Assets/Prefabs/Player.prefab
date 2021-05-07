@@ -329,8 +329,8 @@ MonoBehaviour:
   charController: {fileID: 4321918110156520107}
   model: {fileID: 4321918109369052620}
   noiseArea: {fileID: 7106153527037367307}
-  noiseSensitivity: 200
-  moveSpeed: 0.0005
+  noiseSensitivity: 400
+  moveSpeed: 0.00075
   gravity: {x: 0, y: -0.01, z: 0}
   coffeeCount: 0
   maxCoffee: 5
@@ -382,7 +382,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7106153527037367307}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
