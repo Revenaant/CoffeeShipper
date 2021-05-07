@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     public CharacterController charController;
     public float moveSpeed;
     private Vector3 velocity;
+    public Vector3 gravity;
+
     private int coffeeCount;
     public int maxCoffee = 5;
 
@@ -61,7 +63,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        charController.Move(velocity);
+        charController.Move(velocity + gravity);
 
         velocity *= 0.99f;
     }

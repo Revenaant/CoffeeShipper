@@ -5,7 +5,6 @@ using UnityEngine;
 public class CoffeeMachine : MonoBehaviour
 {
     public GameObject popup;
-    public Player player;
 
     private void Start()
     {
