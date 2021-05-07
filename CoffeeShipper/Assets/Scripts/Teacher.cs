@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class Teacher : MonoBehaviour
 {
-    public Player player;
+    private Player player;
     public NavMeshAgent agent;
     public GameObject exclamationMark;
     public GameObject coffee;
@@ -19,6 +19,7 @@ public class Teacher : MonoBehaviour
     private float timeOfLastCoffee;
     public float coffeeCooldown;
     private bool hasCoffee = false;
+    private LayerMask layerMask;
 
     private bool canHearPlayer = false;
     private bool canSeePlayer = false;
@@ -26,10 +27,12 @@ public class Teacher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         agent.speed = moveSpeed;
         timeOfLastCoffee = 0;
         exclamationMark.SetActive(false);
         coffee.SetActive(false);
+        layerMask = LayerMask.GetMask("Player", "Default");
     }
 
     // Update is called once per frame
@@ -52,8 +55,9 @@ public class Teacher : MonoBehaviour
             if (Vector3.Angle(transform.forward, angleToPlayer) < viewAngle)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, angleToPlayer, out hit, viewDistance))
+                if (Physics.Raycast(transform.position, angleToPlayer, out hit, viewDistance, layerMask, QueryTriggerInteraction.Ignore))
                 {
+                    Debug.Log(hit.collider.gameObject.name);
                     if (hit.collider.gameObject.tag == "Player")
                     {
                         canSeePlayer = true;
@@ -111,7 +115,6 @@ public class Teacher : MonoBehaviour
             followPlayer = false;
             exclamationMark.SetActive(false);
         }
-        Debug.Log("Found!");
     }
 
     private void GetCoffee()
