@@ -9,21 +9,23 @@ public class Player : MonoBehaviour
     public GameObject noiseArea;
     public float noiseSensitivity;
 
+    public List<GameObject> coffeeCups;
+
     public float moveSpeed;
     private Vector3 velocity;
     public Vector3 gravity;
 
     public int coffeeCount;
-    public int maxCoffee = 5;
+    private int maxCoffee;
 
     private bool nearCoffeeMachine = false;
     private bool nearStudent = false;
     private Student nearbyStudent;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-
+        maxCoffee = coffeeCups.Count;
+        UpdateCoffeeCups();
     }
 
     // Update is called once per frame
@@ -87,15 +89,7 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Coffee Grabbed");
         coffeeCount = maxCoffee;
-    }
-
-    public void GiveCoffee(Student student)
-    {
-        if(coffeeCount > 0 && !student.hasCoffee)
-        {
-            student.ReceiveCoffee();
-            coffeeCount--;
-        }
+        UpdateCoffeeCups();
     }
 
     public void LoseCoffee()
@@ -103,6 +97,31 @@ public class Player : MonoBehaviour
         if(coffeeCount > 0)
         {
             coffeeCount--;
+            UpdateCoffeeCups();
+        }
+    }
+
+    public void GiveCoffee(Student student)
+    {
+        if (coffeeCount > 0 && !student.hasCoffee)
+        {
+            student.ReceiveCoffee();
+            LoseCoffee();
+        }
+    }
+
+    public void UpdateCoffeeCups()
+    {
+        for(int i = 0; i < coffeeCups.Count; i++)
+        {
+            if(coffeeCount > i)
+            {
+                coffeeCups[i].SetActive(true);
+            }
+            else
+            {
+                coffeeCups[i].SetActive(false);
+            }
         }
     }
 
