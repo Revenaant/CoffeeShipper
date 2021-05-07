@@ -22,6 +22,8 @@ public class Student : MonoBehaviour
     public void ReceiveCoffee()
     {
         hasCoffee = true;
+        ePrompt.SetActive(false);
+        checkMark.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)

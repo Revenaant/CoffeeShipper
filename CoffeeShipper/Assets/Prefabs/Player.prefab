@@ -339,9 +339,10 @@ MonoBehaviour:
   - {fileID: 1803711568963960}
   - {fileID: 1803710384638434}
   - {fileID: 1803711633084061}
-  moveSpeed: 0.00075
+  moveSpeed: 0.0003
   gravity: {x: 0, y: -0.01, z: 0}
   coffeeCount: 0
+  pauseTime: 1
 --- !u!1 &7106153527037367307
 GameObject:
   m_ObjectHideFlags: 0

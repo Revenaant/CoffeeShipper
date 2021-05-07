@@ -42,14 +42,22 @@ public class Teacher : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckLineOfSight();
-        DrinkCoffee();
-        UpdatePlayerDetection();
-        UpdateAgentDestination();
-        UpdatePopups();
+        if (!Player.isPaused)
+        {
+            agent.isStopped = false;
+            CheckLineOfSight();
+            DrinkCoffee();
+            UpdatePlayerDetection();
+            UpdateAgentDestination();
+            UpdatePopups();
 
-        coffee.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
-        exclamationMark.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+            coffee.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+            exclamationMark.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+        }
+        else
+        {
+            agent.isStopped = true;
+        }
     }
 
     private void CheckLineOfSight()
@@ -115,7 +123,7 @@ public class Teacher : MonoBehaviour
 
     private void UpdatePlayerDetection()
     {
-        if (canHearPlayer || canSeePlayer)
+        if ((canHearPlayer || canSeePlayer) && player.coffeeCount > 0)
             followPlayer = true;
         else
             followPlayer = false;
@@ -142,6 +150,7 @@ public class Teacher : MonoBehaviour
         player.LoseCoffee();
         timeOfLastCoffee = Time.time;
         hasCoffee = true;
+        player.Pause();
     }
 
     private void FinishCoffee()
