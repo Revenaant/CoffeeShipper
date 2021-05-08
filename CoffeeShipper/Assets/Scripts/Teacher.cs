@@ -172,7 +172,26 @@ public class Teacher : MonoBehaviour
     {
         Debug.Log("Taken");
         player.LoseCoffee();
-        player.AudioPlayer.PlayAngry();
+
+        int rnd = UnityEngine.Random.Range(0, 2);
+
+        if(rnd == 0)
+        {
+            player.AudioPlayer.PlayAngry();
+            player.ShowAngryMark();
+        }
+        else
+        {
+            int teacher = audioPlayer.PlayRandom();
+            if (teacher == 0)
+            {
+                player.ShowYvens();
+            }
+            else
+            {
+                player.ShowHans();
+            }
+        }
         
         timeOfLastCoffee = Time.time;
         hasCoffee = true;

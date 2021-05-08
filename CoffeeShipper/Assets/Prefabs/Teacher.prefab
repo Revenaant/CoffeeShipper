@@ -478,6 +478,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   source: {fileID: 7779516064220450284}
   playerDetected: {fileID: 8300000, guid: 5be98b521447bca4397774410739ac5c, type: 3}
+  yvens:
+  - {fileID: 8300000, guid: 7486589ed469dac4ba4fd599897f533d, type: 3}
+  - {fileID: 8300000, guid: 369209dba4bc3a7498dfbaca7ed1b817, type: 3}
+  hans:
+  - {fileID: 8300000, guid: 93698e694e1c46b45bfc86e7b967887f, type: 3}
 --- !u!82 &7779516064220450284
 AudioSource:
   m_ObjectHideFlags: 0
