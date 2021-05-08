@@ -1,14 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private MarkAudioPlayer audioPlayer;
+    public MarkAudioPlayer AudioPlayer => audioPlayer;
+    
     public CharacterController charController;
     public GameObject model;
     public GameObject noiseArea;
+    public GameObject detectionUI;
+    public GameObject detectionArrow;
     public float noiseSensitivity;
 
+    private List<GameObject> arrows;
     public List<GameObject> coffeeCups;
 
     public float moveSpeed;
@@ -32,6 +40,9 @@ public class Player : MonoBehaviour
         maxCoffee = coffeeCups.Count;
         oldPosition = transform.position;
         UpdateCoffeeCups();
+        Teacher.onDetectPlayer += Detected;
+        Teacher.onLosePlayer += Undetected;
+        arrows = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -44,8 +55,6 @@ public class Player : MonoBehaviour
 
             float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
             noiseArea.transform.localScale = new Vector3(soundRadius, soundRadius, soundRadius);
-
-            model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
         }
 
         if(isPaused && Time.time > timeWhenPaused + pauseTime)
@@ -95,6 +104,8 @@ public class Player : MonoBehaviour
         oldPosition = transform.position;
         charController.Move(velocity + gravity);
 
+        model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
+
         velocity *= 0.99f;
     }
 
@@ -103,6 +114,9 @@ public class Player : MonoBehaviour
         Debug.Log("Coffee Grabbed");
         coffeeCount = maxCoffee;
         UpdateCoffeeCups();
+
+        // Play this here?
+        audioPlayer.PlayDontCry(); 
     }
 
     public void LoseCoffee()
@@ -120,6 +134,7 @@ public class Player : MonoBehaviour
         {
             student.ReceiveCoffee();
             LoseCoffee();
+            audioPlayer.PlayHappy();
         }
     }
 
@@ -142,6 +157,28 @@ public class Player : MonoBehaviour
     {
         isPaused = true;
         timeWhenPaused = Time.time;
+    }
+
+    private void Detected(Teacher teacher)
+    {
+        GameObject newArrow = Instantiate(detectionArrow, detectionUI.transform);
+        DetectionArrow arrow = newArrow.GetComponent<DetectionArrow>();
+        arrow.parent = this;
+        arrow.teacherToPointAt = teacher;
+        arrows.Add(newArrow);
+    }
+
+    private void Undetected(Teacher teacher)
+    {
+        for(int i = 0; i < arrows.Count; i++)
+        {
+            if(arrows[i].GetComponent<DetectionArrow>().teacherToPointAt == teacher)
+            {
+                Destroy(arrows[i]);
+                arrows.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)

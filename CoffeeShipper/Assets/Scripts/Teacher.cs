@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,6 +27,9 @@ public class Teacher : MonoBehaviour
 
     private bool canHearPlayer = false;
     private bool canSeePlayer = false;
+
+    public static event Action<Teacher> onDetectPlayer;
+    public static event Action<Teacher> onLosePlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -123,10 +127,27 @@ public class Teacher : MonoBehaviour
 
     private void UpdatePlayerDetection()
     {
-        if ((canHearPlayer || canSeePlayer) && player.coffeeCount > 0)
-            followPlayer = true;
-        else
-            followPlayer = false;
+        if ((canHearPlayer || canSeePlayer) && player.coffeeCount > 0 && !hasCoffee)
+        {
+            if (!followPlayer)
+            {
+                DetectPlayer();
+            }
+        }
+        else if (followPlayer)
+            LosePlayer();
+    }
+
+    private void DetectPlayer()
+    {
+        followPlayer = true;
+        onDetectPlayer.Invoke(this);
+    }
+
+    private void LosePlayer()
+    {
+        followPlayer = false;
+        onLosePlayer.Invoke(this);
     }
 
     private void UpdatePopups()
@@ -148,6 +169,8 @@ public class Teacher : MonoBehaviour
     {
         Debug.Log("Taken");
         player.LoseCoffee();
+        player.AudioPlayer.PlayAngry();
+        
         timeOfLastCoffee = Time.time;
         hasCoffee = true;
         player.Pause();
