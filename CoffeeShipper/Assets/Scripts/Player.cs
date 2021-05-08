@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
         UpdateCoffeeCups();
 
         // Play this here?
-        audioPlayer.PlayDontCry(); 
+        audioPlayer.PlayCoffeePour(); 
     }
 
     public void LoseCoffee()

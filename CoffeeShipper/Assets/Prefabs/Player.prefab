@@ -388,6 +388,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 060c6f0c9f47c474e9321f315e201e0f, type: 3}
   - {fileID: 8300000, guid: 90125b6e5cf7a5045b1b827aff5e8eb6, type: 3}
   dontCryAudio: {fileID: 8300000, guid: 2dd440ed2ec83e64d82992ee1ae77173, type: 3}
+  coffeeAudio: {fileID: 8300000, guid: 466a7ee4c7848374b81dc4ec57702cf6, type: 3}
 --- !u!82 &5261719807898168136
 AudioSource:
   m_ObjectHideFlags: 0

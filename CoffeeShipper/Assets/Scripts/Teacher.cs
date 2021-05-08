@@ -9,6 +9,8 @@ public class Teacher : MonoBehaviour
     public GameObject exclamationMark;
     public GameObject coffee;
     public bool standStill;
+    [SerializeField]
+    private TeacherAudioPlayer audioPlayer;
 
     public int moveSpeed;
     public Vector3 patrolStart;
@@ -142,6 +144,7 @@ public class Teacher : MonoBehaviour
     {
         followPlayer = true;
         onDetectPlayer.Invoke(this);
+        audioPlayer.PlayerTeacherDetected();
     }
 
     private void LosePlayer()
