@@ -352,7 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioPlayer: {fileID: 4223122949082932522}
   charController: {fileID: 4321918110156520107}
-  model: {fileID: 0}
+  model: {fileID: 7392514132203444775}
   noiseArea: {fileID: 7106153527037367307}
   detectionUI: {fileID: 965512205}
   detectionArrow: {fileID: 3407709166024849530, guid: 22b8eea787888ab4ab8cc46f39dc2309, type: 3}
@@ -837,14 +837,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07959b3ef64efdd41b4b8022c923f37e, type: 3}
---- !u!1 &1803711112264110 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1803711740447776, guid: 07959b3ef64efdd41b4b8022c923f37e, type: 3}
-  m_PrefabInstance: {fileID: 1703851406}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4120191667633156 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4120190133455242, guid: 07959b3ef64efdd41b4b8022c923f37e, type: 3}
+  m_PrefabInstance: {fileID: 1703851406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1803711112264110 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1803711740447776, guid: 07959b3ef64efdd41b4b8022c923f37e, type: 3}
   m_PrefabInstance: {fileID: 1703851406}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5955757305732947657
@@ -919,5 +919,10 @@ PrefabInstance:
 --- !u!4 &7916392198625214621 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4574449364752965204, guid: 8cd662da6ff348c4a82773ef22d03cf1, type: 3}
+  m_PrefabInstance: {fileID: 5955757305732947657}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7392514132203444775 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3760617673410266350, guid: 8cd662da6ff348c4a82773ef22d03cf1, type: 3}
   m_PrefabInstance: {fileID: 5955757305732947657}
   m_PrefabAsset: {fileID: 0}
