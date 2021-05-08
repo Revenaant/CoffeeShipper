@@ -14,6 +14,10 @@ public class Player : MonoBehaviour
     public GameObject noiseArea;
     public GameObject detectionUI;
     public GameObject detectionArrow;
+
+    [SerializeField]
+    private GameObject markHappyBalloon;
+
     public float noiseSensitivity;
 
     private List<GameObject> arrows;
@@ -34,6 +38,12 @@ public class Player : MonoBehaviour
     public static bool isPaused;
     private  float timeWhenPaused;
     public float pauseTime;
+
+    private bool balloonIsVisible;
+    [SerializeField]
+    private float balloonDuration;
+    private float balloonAppearTime;
+    private GameObject visibleBalloon;
 
     private void Start()
     {
@@ -60,6 +70,11 @@ public class Player : MonoBehaviour
         if(isPaused && Time.time > timeWhenPaused + pauseTime)
         {
             isPaused = false;
+        }
+        
+        if(Time.time > balloonAppearTime + balloonDuration && balloonIsVisible)
+        {
+            HideBalloon();
         }
     }
 
@@ -135,7 +150,22 @@ public class Player : MonoBehaviour
             student.ReceiveCoffee();
             LoseCoffee();
             audioPlayer.PlayHappy();
+            ShowBalloon(markHappyBalloon);
         }
+    }
+
+    private void ShowBalloon(GameObject objectToShow)
+    {
+        balloonIsVisible = true;
+        objectToShow.SetActive(true);
+        visibleBalloon = objectToShow;
+        balloonAppearTime = Time.time;
+    }
+
+    private void HideBalloon()
+    {
+        balloonIsVisible = false;
+        visibleBalloon.SetActive(false);
     }
 
     public void UpdateCoffeeCups()
