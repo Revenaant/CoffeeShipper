@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private MarkAudioPlayer audioPlayer;
+    public MarkAudioPlayer AudioPlayer => audioPlayer;
+    
     public CharacterController charController;
     public GameObject model;
     public GameObject noiseArea;
@@ -103,6 +107,9 @@ public class Player : MonoBehaviour
         Debug.Log("Coffee Grabbed");
         coffeeCount = maxCoffee;
         UpdateCoffeeCups();
+
+        // Play this here?
+        audioPlayer.PlayDontCry(); 
     }
 
     public void LoseCoffee()
@@ -120,6 +127,7 @@ public class Player : MonoBehaviour
         {
             student.ReceiveCoffee();
             LoseCoffee();
+            audioPlayer.PlayHappy();
         }
     }
 

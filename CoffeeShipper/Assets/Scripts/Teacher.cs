@@ -148,6 +148,8 @@ public class Teacher : MonoBehaviour
     {
         Debug.Log("Taken");
         player.LoseCoffee();
+        player.AudioPlayer.PlayAngry();
+        
         timeOfLastCoffee = Time.time;
         hasCoffee = true;
         player.Pause();
