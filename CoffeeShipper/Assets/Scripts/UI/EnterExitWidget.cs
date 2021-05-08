@@ -25,6 +25,13 @@ public class EnterExitWidget : MonoBehaviour
         Duration = 0.5f,
         Ease = Ease.InCubic
     };
+    
+    [SerializeField]
+    private TweenSettings exitFirstTime = new TweenSettings()
+    {
+        Duration = 0.5f,
+        Ease = Ease.InCubic
+    };
 
     private bool isInitialized;
     private bool isHidden;
@@ -82,6 +89,25 @@ public class EnterExitWidget : MonoBehaviour
         rectTransform
             .DOAnchorPos(outsideScreenPosition, exit.Duration)
             .SetEase(exit.Ease)
+            .OnComplete(() =>
+            {
+                rectTransform.anchoredPosition = outsideScreenPosition;
+                isHidden = true;
+                gameObject.SetActive(false);
+                onCompleteCallback?.Invoke();
+            });
+    }
+    
+    public void HideFirstTime(Action onCompleteCallback = null)
+    {
+        Initialize();
+        rectTransform.DOKill(false);
+
+        outsideScreenPosition = GetOutsideScreenPosition();
+
+        rectTransform
+            .DOAnchorPos(outsideScreenPosition, exitFirstTime.Duration)
+            .SetEase(exitFirstTime.Ease)
             .OnComplete(() =>
             {
                 rectTransform.anchoredPosition = outsideScreenPosition;

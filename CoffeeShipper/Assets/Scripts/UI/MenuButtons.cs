@@ -8,15 +8,27 @@ public partial class MainMenuController
         // If we're on the last level, "Next Level" just restarts the same last level.
         if (currentLevelIndex >= levelConfig.Levels.Length - 1)
             currentLevelIndex = levelConfig.Levels.Length - 2;
-                
-        SceneManager.LoadScene(levelConfig.Levels[currentLevelIndex++], LoadSceneMode.Single);
-        Hide(() => InitializeState(ScreenState.PauseScreen));
+        
+        SceneManager.LoadScene(levelConfig.Levels[currentLevelIndex++].Scene, LoadSceneMode.Single);
+        Hide(() =>
+        {
+            currentCoffeesDelivered = 0;
+            TotalMachineTrips = 0;
+            TotalCoffeesLost = 0;
+            
+            InitializeState(ScreenState.PauseScreen);
+            UnsusbscribeActions();
+            SusbscribeActions();
+        });
     }
     
     private void OnStartButtonClicked()
     {
-        SceneManager.LoadScene(levelConfig.Levels[0], LoadSceneMode.Single);
-        Hide(() => InitializeState(ScreenState.PauseScreen));
+        enterExitWidget.HideFirstTime(() =>
+        {
+            isPaused = false;
+            InitializeState(ScreenState.PauseScreen);
+        });
     }
 
     private void OnQuitButtonClicked()

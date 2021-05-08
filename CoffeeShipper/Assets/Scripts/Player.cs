@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPause
 {
     [SerializeField]
     private MarkAudioPlayer audioPlayer;
@@ -35,6 +35,10 @@ public class Player : MonoBehaviour
     private  float timeWhenPaused;
     public float pauseTime;
 
+    public Action OnCoffeeDelivered;
+    public Action OnCoffeeLost;
+    public Action OnTripToCoffeeMachine;
+    
     private void Start()
     {
         maxCoffee = coffeeCups.Count;
@@ -117,6 +121,7 @@ public class Player : MonoBehaviour
 
         // Play this here?
         audioPlayer.PlayCoffeePour(); 
+        OnTripToCoffeeMachine?.Invoke();
     }
 
     public void LoseCoffee()
@@ -125,6 +130,7 @@ public class Player : MonoBehaviour
         {
             coffeeCount--;
             UpdateCoffeeCups();
+            OnCoffeeLost?.Invoke();
         }
     }
 
@@ -135,6 +141,7 @@ public class Player : MonoBehaviour
             student.ReceiveCoffee();
             LoseCoffee();
             audioPlayer.PlayHappy();
+            OnCoffeeDelivered?.Invoke();
         }
     }
 
@@ -157,6 +164,11 @@ public class Player : MonoBehaviour
     {
         isPaused = true;
         timeWhenPaused = Time.time;
+    }
+
+    public void Unpause()
+    {
+        isPaused = false;
     }
 
     private void Detected(Teacher teacher)
