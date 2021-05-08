@@ -1,5 +1,6 @@
+using System;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class MainMenuController : MonoBehaviour
@@ -15,6 +16,12 @@ public partial class MainMenuController : MonoBehaviour
 
     [SerializeField]
     private EnterExitWidget enterExitWidget;
+
+    [SerializeField]
+    private EventSystem eventSystem;
+
+    [SerializeField]
+    private LevelConfig levelConfig;
 
     [Header("Main Menu")]
     [SerializeField]
@@ -50,9 +57,11 @@ public partial class MainMenuController : MonoBehaviour
 
     private bool isPaused = false;
     private ScreenState currentState = ScreenState.MainMenuScreen;
+    private int currentLevelIndex;
 
     private void Awake()
     {
+        currentLevelIndex = 0;
         InitializeState(ScreenState.MainMenuScreen);
     }
 
@@ -63,54 +72,75 @@ public partial class MainMenuController : MonoBehaviour
         mainMenuScreen.SetActive(state == ScreenState.MainMenuScreen);
         pauseScreen.SetActive(state == ScreenState.PauseScreen);
         scoreScreen.SetActive(state == ScreenState.ScoreScreen);
+
+        RemoveListeners();
+        eventSystem.SetSelectedGameObject(null);
         
         switch (state)
         {
             case ScreenState.MainMenuScreen:
                 startButton.onClick.AddListener(OnStartButtonClicked);
                 quitButton.onClick.AddListener(OnQuitButtonClicked);
+                eventSystem.SetSelectedGameObject(startButton.gameObject);
                 break;
             case ScreenState.PauseScreen:
-                // resumeButton.onClick.AddListener();
-                // levelSelectButton.onClick.AddListener();
-                // backToMenuButton.onClick.AddListener();
+                resumeButton.onClick.AddListener(OnResumeButtonClicked);
+                restartButton.onClick.AddListener(OnRestartButtonClicked);
+                backToMenuButton.onClick.AddListener(OnQuitButtonClicked);
+                eventSystem.SetSelectedGameObject(resumeButton.gameObject);
                 break;
             case ScreenState.ScoreScreen:
-                // nextLevelButton.onClick.AddListener();
+                nextLevelButton.onClick.AddListener(OnNextLevelButtonClicked);
+                eventSystem.SetSelectedGameObject(nextLevelButton.gameObject);
                 break;
         }
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            InitializeState(ScreenState.ScoreScreen);
+            Show();
+        }
+        
         if (currentState == ScreenState.PauseScreen && Input.GetKeyDown(KeyCode.Escape))
         {
-            isPaused = !isPaused;
-            UpdateShow();
+            if (isPaused)
+                Hide();
+            else
+                Show();
         }
     }
 
-    private void UpdateShow()
+    private void Show(Action onCompleteCallback = null)
     {
-        if (isPaused)
-            enterExitWidget.Hide();
-        else
-            enterExitWidget.Show();
+        isPaused = true;
+        enterExitWidget.Show(onCompleteCallback);
+        
+        eventSystem.SetSelectedGameObject(resumeButton.gameObject);
     }
 
-    private void Show()
+    private void Hide(Action onCompleteCallback = null)
     {
-        enterExitWidget.Show();
+        isPaused = false;
+        enterExitWidget.Hide(onCompleteCallback);
     }
 
-    private void Hide()
+    private void RemoveListeners()
     {
-        enterExitWidget.Hide();
+        startButton.onClick.RemoveListener(OnStartButtonClicked);
+        quitButton.onClick.RemoveListener(OnQuitButtonClicked);
+        
+        resumeButton.onClick.AddListener(OnResumeButtonClicked);
+        restartButton.onClick.AddListener(OnRestartButtonClicked);
+        backToMenuButton.onClick.AddListener(OnQuitButtonClicked);
+        
+        nextLevelButton.onClick.AddListener(OnNextLevelButtonClicked);
     }
 
     private void OnDestroy()
     {
-        startButton.onClick.RemoveListener(OnStartButtonClicked);
-        quitButton.onClick.RemoveListener(OnQuitButtonClicked);
+        RemoveListeners();
     }
 }

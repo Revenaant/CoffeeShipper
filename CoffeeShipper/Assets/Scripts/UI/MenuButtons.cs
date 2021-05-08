@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,45 +5,41 @@ public partial class MainMenuController
 {
     private void OnNextLevelButtonClicked()
     {
-        // TODO get next scene
+        // If we're on the last level, "Next Level" just restarts the same last level.
+        if (currentLevelIndex >= levelConfig.Levels.Length - 1)
+            currentLevelIndex = levelConfig.Levels.Length - 2;
+                
+        SceneManager.LoadScene(levelConfig.Levels[currentLevelIndex++], LoadSceneMode.Single);
+        Hide(() => InitializeState(ScreenState.PauseScreen));
     }
     
     private void OnStartButtonClicked()
     {
-        SceneManager.LoadScene("level 0", LoadSceneMode.Single);
-        InitializeState(ScreenState.PauseScreen);
-        
-        isPaused = false;
-        UpdateShow();
+        SceneManager.LoadScene(levelConfig.Levels[0], LoadSceneMode.Single);
+        Hide(() => InitializeState(ScreenState.PauseScreen));
     }
 
     private void OnQuitButtonClicked()
     {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        return;
+#endif
         Application.Quit();
     }
 
     private void OnResumeButtonClicked()
     {
-        isPaused = false;
-        UpdateShow();
+        Hide();
     }
 
     private void OnRestartButtonClicked()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-        isPaused = false;
-        UpdateShow();
-    }
-    
-    private void OnBackToMenuButtonClicked()
-    {
-        InitializeState(ScreenState.MainMenuScreen);
+        Hide();
     }
 }
 
 // TODO
-// Buttons work with keyboard
 // Buttons small anim?
-// Test states opening
 // Stats on score screen
-// 

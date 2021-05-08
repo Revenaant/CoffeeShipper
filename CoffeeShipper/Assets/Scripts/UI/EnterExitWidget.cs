@@ -52,7 +52,7 @@ public class EnterExitWidget : MonoBehaviour
         isInitialized = true;
     }
 
-    public void Show()
+    public void Show(Action onCompleteCallback = null)
     {
         Initialize();
         if (isHidden)
@@ -68,10 +68,11 @@ public class EnterExitWidget : MonoBehaviour
 
         rectTransform
             .DOAnchorPos(normalScreenPosition, enter.Duration)
-            .SetEase(enter.Ease);
+            .SetEase(enter.Ease)
+            .OnComplete(() => onCompleteCallback?.Invoke());
     }
 
-    public void Hide()
+    public void Hide(Action onCompleteCallback = null)
     {
         Initialize();
         rectTransform.DOKill(false);
@@ -86,6 +87,7 @@ public class EnterExitWidget : MonoBehaviour
                 rectTransform.anchoredPosition = outsideScreenPosition;
                 isHidden = true;
                 gameObject.SetActive(false);
+                onCompleteCallback?.Invoke();
             });
     }
 
