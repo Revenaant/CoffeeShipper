@@ -14,6 +14,16 @@ public class Player : MonoBehaviour, IPause
     public GameObject noiseArea;
     public GameObject detectionUI;
     public GameObject detectionArrow;
+
+    [SerializeField]
+    private GameObject markHappyBalloon;
+    [SerializeField]
+    private GameObject markAngryBalloon;
+    [SerializeField]
+    private GameObject yvensBalloon;
+    [SerializeField]
+    private GameObject hansBalloon;
+
     public float noiseSensitivity;
 
     private List<GameObject> arrows;
@@ -35,10 +45,12 @@ public class Player : MonoBehaviour, IPause
     private  float timeWhenPaused;
     public float pauseTime;
 
-    public Action OnCoffeeDelivered;
-    public Action OnCoffeeLost;
-    public Action OnTripToCoffeeMachine;
-    
+    private bool balloonIsVisible;
+    [SerializeField]
+    private float balloonDuration;
+    private float balloonAppearTime;
+    private GameObject visibleBalloon;
+
     private void Start()
     {
         maxCoffee = coffeeCups.Count;
@@ -64,6 +76,11 @@ public class Player : MonoBehaviour, IPause
         if(isPaused && Time.time > timeWhenPaused + pauseTime)
         {
             isPaused = false;
+        }
+        
+        if(Time.time > balloonAppearTime + balloonDuration && balloonIsVisible)
+        {
+            HideBalloon();
         }
     }
 
@@ -141,8 +158,37 @@ public class Player : MonoBehaviour, IPause
             student.ReceiveCoffee();
             LoseCoffee();
             audioPlayer.PlayHappy();
-            OnCoffeeDelivered?.Invoke();
+            ShowBalloon(markHappyBalloon);
         }
+    }
+
+    private void ShowBalloon(GameObject objectToShow)
+    {
+        balloonIsVisible = true;
+        objectToShow.SetActive(true);
+        visibleBalloon = objectToShow;
+        balloonAppearTime = Time.time;
+    }
+
+    public void ShowAngryMark()
+    {
+        ShowBalloon(markAngryBalloon);
+    }
+
+    public void ShowYvens()
+    {
+        ShowBalloon(yvensBalloon);
+    }
+
+    public void ShowHans()
+    {
+        ShowBalloon(hansBalloon);
+    }
+
+    private void HideBalloon()
+    {
+        balloonIsVisible = false;
+        visibleBalloon.SetActive(false);
     }
 
     public void UpdateCoffeeCups()
