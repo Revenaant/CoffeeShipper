@@ -50,6 +50,10 @@ public class Player : MonoBehaviour, IPause
     private float balloonDuration;
     private float balloonAppearTime;
     private GameObject visibleBalloon;
+    
+    public Action OnCoffeeDelivered;
+    public Action OnCoffeeLost;
+    public Action OnTripToCoffeeMachine;
 
     private void Start()
     {
@@ -159,6 +163,7 @@ public class Player : MonoBehaviour, IPause
             LoseCoffee();
             audioPlayer.PlayHappy();
             ShowBalloon(markHappyBalloon);
+            OnCoffeeDelivered?.Invoke();
         }
     }
 
