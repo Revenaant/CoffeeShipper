@@ -13,18 +13,23 @@ MonoBehaviour:
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
   levels:
-  - sceneAsset: {fileID: 102900000, guid: 821e21344a9c2dc478762c664f01c6f0, type: 3}
-    sceneName: level 0
-    scenePath: Assets/Scenes/level 0.unity
-  - sceneAsset: {fileID: 102900000, guid: 1ae160b9b5d775842ae8a44446ea3883, type: 3}
-    sceneName: level 1
-    scenePath: Assets/Scenes/level 1.unity
-  - sceneAsset: {fileID: 102900000, guid: 39e434c67b9efe041b85a11eafc89049, type: 3}
-    sceneName: level2
-    scenePath: Assets/Scenes/level2.unity
-  - sceneAsset: {fileID: 102900000, guid: 3ab37756e5a35db46b7d9620a020c8a3, type: 3}
-    sceneName: level3 1
-    scenePath: Assets/Scenes/level3 1.unity
-  - sceneAsset: {fileID: 102900000, guid: 21bd3131bb073a8409d868c8afc8a573, type: 3}
-    sceneName: level5
-    scenePath: Assets/Scenes/level5.unity
+  - scene:
+      sceneAsset: {fileID: 102900000, guid: 821e21344a9c2dc478762c664f01c6f0, type: 3}
+      sceneName: level 0
+      scenePath: Assets/Scenes/level 0.unity
+    coffeesRequired: 1
+  - scene:
+      sceneAsset: {fileID: 102900000, guid: 1ae160b9b5d775842ae8a44446ea3883, type: 3}
+      sceneName: level 1
+      scenePath: Assets/Scenes/level 1.unity
+    coffeesRequired: 1
+  - scene:
+      sceneAsset: {fileID: 102900000, guid: 547b7b79926c7a24cb82e49cdd265f20, type: 3}
+      sceneName: level 2
+      scenePath: Assets/Scenes/level 2.unity
+    coffeesRequired: 4
+  - scene:
+      sceneAsset: {fileID: 102900000, guid: 05b37e684c0e97b4a947c5abad7e2b7e, type: 3}
+      sceneName: level 3
+      scenePath: Assets/Scenes/level 3.unity
+    coffeesRequired: 8
