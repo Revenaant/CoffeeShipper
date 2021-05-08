@@ -17,6 +17,12 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject markHappyBalloon;
+    [SerializeField]
+    private GameObject markAngryBalloon;
+    [SerializeField]
+    private GameObject yvensBalloon;
+    [SerializeField]
+    private GameObject hansBalloon;
 
     public float noiseSensitivity;
 
@@ -160,6 +166,21 @@ public class Player : MonoBehaviour
         objectToShow.SetActive(true);
         visibleBalloon = objectToShow;
         balloonAppearTime = Time.time;
+    }
+
+    public void ShowAngryMark()
+    {
+        ShowBalloon(markAngryBalloon);
+    }
+
+    public void ShowYvens()
+    {
+        ShowBalloon(yvensBalloon);
+    }
+
+    public void ShowHans()
+    {
+        ShowBalloon(hansBalloon);
     }
 
     private void HideBalloon()
