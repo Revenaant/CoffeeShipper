@@ -18,6 +18,9 @@ public class MarkAudioPlayer : MonoBehaviour
     [SerializeField]
     private AudioClip dontCryAudio;
 
+    [SerializeField]
+    private AudioClip coffeeAudio;
+
     public void PlayHappy()
     {
         source.pitch = Random.Range(0.95f, 1.05f);
@@ -36,5 +39,10 @@ public class MarkAudioPlayer : MonoBehaviour
     {
         source.pitch = Random.Range(0.95f, 1.05f);
         source.PlayOneShot(dontCryAudio, 1);
+    }
+
+    public void PlayCoffeePour()
+    {
+        source.PlayOneShot(coffeeAudio, 1);
     }
 }

@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
             Move();
 
             float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
-            noiseArea.transform.localScale = new Vector3(soundRadius, soundRadius, soundRadius);
+            noiseArea.transform.localScale = new Vector3(soundRadius, 0.1f, soundRadius);
         }
 
         if(isPaused && Time.time > timeWhenPaused + pauseTime)
@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
         UpdateCoffeeCups();
 
         // Play this here?
-        audioPlayer.PlayDontCry(); 
+        audioPlayer.PlayCoffeePour(); 
     }
 
     public void LoseCoffee()
