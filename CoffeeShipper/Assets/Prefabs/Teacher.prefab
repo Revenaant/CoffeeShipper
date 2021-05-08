@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 7779516064220450284}
-  playerDetected: {fileID: 8300000, guid: af4a29209dafa5142ba47cd1de65474c, type: 3}
+  playerDetected: {fileID: 8300000, guid: a50030868aa99f9468689f81f25ac596, type: 3}
 --- !u!82 &7779516064220450284
 AudioSource:
   m_ObjectHideFlags: 0
