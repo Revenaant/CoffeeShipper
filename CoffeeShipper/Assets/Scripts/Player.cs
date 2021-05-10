@@ -81,13 +81,23 @@ public class Player : MonoBehaviour, IPause
         CheckInput();
         Move();
 
-        float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
-        noiseArea.transform.localScale = new Vector3(soundRadius, 0.1f, soundRadius);
-
         if(Time.time > balloonAppearTime + balloonDuration && balloonIsVisible)
         {
             HideBalloon();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
+        
+#if UNITY_EDITOR
+        // I don't know why the radius grows much bigger build than in editor. Values tweaked to build.
+        soundRadius *= 6;
+#endif
+
+        noiseArea.transform.localScale = Vector3.Lerp(noiseArea.transform.localScale, 
+            new Vector3(soundRadius, 0.1f, soundRadius), Time.fixedDeltaTime * 2);
     }
 
     private void CheckInput()
@@ -113,7 +123,7 @@ public class Player : MonoBehaviour, IPause
 
         newVelocity.Normalize();
         newVelocity *= moveSpeed;
-        velocity += newVelocity * Time.deltaTime;
+        velocity += newVelocity;
 
         if (nearCoffeeMachine && Input.GetKeyDown(KeyCode.E))
         {
@@ -129,11 +139,11 @@ public class Player : MonoBehaviour, IPause
     private void Move()
     {
         oldPosition = transform.position;
-        charController.Move(velocity + gravity);
+        charController.Move((velocity + gravity) * Time.deltaTime);
 
         model.transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity, Vector3.up), 360);
 
-        velocity *= 0.99f;
+        velocity *= 0.9f;
     }
 
     private void GrabCoffee()

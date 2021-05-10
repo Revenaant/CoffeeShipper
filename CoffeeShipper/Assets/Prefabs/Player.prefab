@@ -614,13 +614,13 @@ MonoBehaviour:
   markAngryBalloon: {fileID: 3154547388852242068}
   yvensBalloon: {fileID: 7321905797757461538}
   hansBalloon: {fileID: 7769393540220821369}
-  noiseSensitivity: 400
+  noiseSensitivity: 150
   coffeeCups:
   - {fileID: 1803711112264110}
   - {fileID: 1803711568963960}
   - {fileID: 1803710384638434}
   - {fileID: 1803711633084061}
-  moveSpeed: 0.04
+  moveSpeed: 0.25
   gravity: {x: 0, y: -0.01, z: 0}
   coffeeCount: 0
   pauseTime: 1
