@@ -1,11 +1,13 @@
 /[Ll]ibrary/
 /[Tt]emp/
 /[Ll]ogs/
-/CoffeeShipper/[Ll]ibrary/
-/CoffeeShipper/[Tt]emp/
-/[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/CoffeeShipper/[Ll]ibrary/
+/CoffeeShipper/[Tt]emp/
+/CoffeeShipper/[Oo]bj/
+/CoffeeShipper/[Bb]uild/
+/CoffeeShipper/[Bb]uilds/
 /Assets/AssetStoreTools*
 /Assets/AssetBundles
 /Assets/AssetBundles.meta
