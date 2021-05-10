@@ -243,7 +243,11 @@ public partial class MainMenuController : MonoBehaviour
 
     private IEnumerator DelayedCallbackEnumerator(float seconds, Action action)
     {
-        yield return new WaitForSeconds(seconds);
+        do
+        {
+            yield return new WaitForSeconds(seconds);
+        } while (FindObjectOfType<Player>() == null);
+
         action?.Invoke();
     }
 }

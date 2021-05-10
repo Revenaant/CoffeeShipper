@@ -56,6 +56,15 @@ public partial class MainMenuController
     private void OnRestartButtonClicked()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-        Hide();
+        Hide(() =>
+        {
+            currentCoffeesDelivered = 0;
+            TotalMachineTrips = 0;
+            TotalCoffeesLost = 0;
+            
+            InitializeState(ScreenState.PauseScreen);
+            UnsusbscribeActions();
+            SusbscribeActions();
+        });
     }
 }
