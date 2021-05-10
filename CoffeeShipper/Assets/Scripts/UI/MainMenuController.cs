@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -81,6 +82,14 @@ public partial class MainMenuController : MonoBehaviour
     {
         currentLevelIndex = 0;
         InitializeState(ScreenState.MainMenuScreen);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // Call this once going from Bootstrap to 1st level so player starts Paused (Until we click start)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        StartCoroutine(DelayedCallbackEnumerator(0.1f, () => SetPausablesPaused(true)));
     }
 
     private void InitializeState(ScreenState state)
@@ -100,7 +109,6 @@ public partial class MainMenuController : MonoBehaviour
                 startButton.onClick.AddListener(OnStartButtonClicked);
                 quitButton.onClick.AddListener(OnQuitButtonClicked);
                 eventSystem.SetSelectedGameObject(startButton.gameObject);
-                SusbscribeActions();
                 break;
             case ScreenState.PauseScreen:
                 resumeButton.onClick.AddListener(OnResumeButtonClicked);
@@ -117,12 +125,6 @@ public partial class MainMenuController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            InitializeState(ScreenState.ScoreScreen);
-            Show();
-        }
-
         if (currentState == ScreenState.PauseScreen && Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
@@ -135,9 +137,7 @@ public partial class MainMenuController : MonoBehaviour
     private void Show(Action onCompleteCallback = null)
     {
         isPaused = true;
-        IEnumerable<IPause> pausables = FindInterfacesOfType<IPause>();
-        foreach (IPause pausable in pausables)
-            pausable.Pause();
+        SetPausablesPaused(true);
 
         enterExitWidget.Show(onCompleteCallback);
         eventSystem.SetSelectedGameObject(resumeButton.gameObject);
@@ -146,14 +146,23 @@ public partial class MainMenuController : MonoBehaviour
     private void Hide(Action onCompleteCallback = null)
     {
         isPaused = false;
-        IEnumerable<IPause> pausables = FindInterfacesOfType<IPause>();
-        foreach (IPause pausable in pausables)
-            pausable.Unpause();
-
+        SetPausablesPaused(false);
         enterExitWidget.Hide(onCompleteCallback);
     }
 
-    public static IEnumerable<T> FindInterfacesOfType<T>(bool includeInactive = false)
+    private void SetPausablesPaused(bool paused)
+    {
+        IEnumerable<IPause> pausables = FindInterfacesOfType<IPause>();
+        foreach (IPause pausable in pausables)
+        {
+            if (paused)
+                pausable.Pause();
+            else
+                pausable.Unpause();
+        }
+    }
+
+    private static IEnumerable<T> FindInterfacesOfType<T>(bool includeInactive = false)
     {
         foreach (GameObject go in SceneManager.GetActiveScene().GetRootGameObjects())
         {
@@ -167,11 +176,11 @@ public partial class MainMenuController : MonoBehaviour
         startButton.onClick.RemoveListener(OnStartButtonClicked);
         quitButton.onClick.RemoveListener(OnQuitButtonClicked);
 
-        resumeButton.onClick.AddListener(OnResumeButtonClicked);
-        restartButton.onClick.AddListener(OnRestartButtonClicked);
-        backToMenuButton.onClick.AddListener(OnQuitButtonClicked);
+        resumeButton.onClick.RemoveListener(OnResumeButtonClicked);
+        restartButton.onClick.RemoveListener(OnRestartButtonClicked);
+        backToMenuButton.onClick.RemoveListener(OnQuitButtonClicked);
 
-        nextLevelButton.onClick.AddListener(OnNextLevelButtonClicked);
+        nextLevelButton.onClick.RemoveListener(OnNextLevelButtonClicked);
     }
 
     private void OnDestroy()
@@ -185,18 +194,18 @@ public partial class MainMenuController : MonoBehaviour
         Player player = FindObjectOfType<Player>();
         if (player == null)
             return;
-        
+
         player.OnCoffeeLost += OnCoffeeLost;
         player.OnCoffeeDelivered += OnCoffeeDelivered;
         player.OnTripToCoffeeMachine += OnTripToMachine;
     }
-    
+
     private void UnsusbscribeActions()
     {
         Player player = FindObjectOfType<Player>();
         if (player == null)
             return;
-        
+
         player.OnCoffeeLost -= OnCoffeeLost;
         player.OnCoffeeDelivered -= OnCoffeeDelivered;
         player.OnTripToCoffeeMachine -= OnTripToMachine;
@@ -215,16 +224,26 @@ public partial class MainMenuController : MonoBehaviour
     private void OnCoffeeDelivered()
     {
         currentCoffeesDelivered++;
-        
+
         if (currentCoffeesDelivered >= levelConfig.Levels[currentLevelIndex].CoffeesRequired)
         {
             InitializeState(ScreenState.ScoreScreen);
-            
+
             deliveredText.text = $"Coffees Delivered: {currentCoffeesDelivered}";
             lostText.text = $"Coffees Lost: {TotalCoffeesLost - currentCoffeesDelivered}";
             tripsText.text = $"Trips to the Coffee Machine: {TotalMachineTrips}";
-            
+
+            // Last level
+            if (currentLevelIndex >= levelConfig.Levels.Length - 1)
+                nextLevelButton.GetComponentInChildren<TextMeshProUGUI>().text = "Continue";
+
             Show();
         }
+    }
+
+    private IEnumerator DelayedCallbackEnumerator(float seconds, Action action)
+    {
+        yield return new WaitForSeconds(seconds);
+        action?.Invoke();
     }
 }

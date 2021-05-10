@@ -5,11 +5,17 @@ public partial class MainMenuController
 {
     private void OnNextLevelButtonClicked()
     {
-        // If we're on the last level, "Next Level" just restarts the same last level.
-        if (currentLevelIndex >= levelConfig.Levels.Length - 1)
-            currentLevelIndex = levelConfig.Levels.Length - 2;
-        
-        SceneManager.LoadScene(levelConfig.Levels[currentLevelIndex++].Scene, LoadSceneMode.Single);
+        int nextLevelIndex = levelConfig.GetNextLevelIndex(currentLevelIndex);
+        if (nextLevelIndex == -1)
+        {
+            // For simplicity on last level, open screen with Resume, Restart, Quit buttons instead.
+            InitializeState(ScreenState.PauseScreen);
+            return;
+        }
+
+        SceneManager.LoadScene(levelConfig.Levels[nextLevelIndex].Scene, LoadSceneMode.Single);
+        currentLevelIndex = nextLevelIndex;
+
         Hide(() =>
         {
             currentCoffeesDelivered = 0;
@@ -27,7 +33,9 @@ public partial class MainMenuController
         enterExitWidget.HideFirstTime(() =>
         {
             isPaused = false;
+            SetPausablesPaused(false);
             InitializeState(ScreenState.PauseScreen);
+            SusbscribeActions();
         });
     }
 
@@ -51,7 +59,3 @@ public partial class MainMenuController
         Hide();
     }
 }
-
-// TODO
-// Buttons small anim?
-// Stats on score screen

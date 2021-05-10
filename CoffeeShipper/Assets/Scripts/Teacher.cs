@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Teacher : MonoBehaviour
+public class Teacher : MonoBehaviour, IPause
 {
     private Player player;
     public NavMeshAgent agent;
@@ -30,6 +30,8 @@ public class Teacher : MonoBehaviour
     private bool canHearPlayer = false;
     private bool canSeePlayer = false;
 
+    private bool isPaused = false;
+
     public static event Action<Teacher> onDetectPlayer;
     public static event Action<Teacher> onLosePlayer;
 
@@ -48,22 +50,22 @@ public class Teacher : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!Player.isPaused)
-        {
-            agent.isStopped = false;
-            CheckLineOfSight();
-            DrinkCoffee();
-            UpdatePlayerDetection();
-            UpdateAgentDestination();
-            UpdatePopups();
-
-            coffee.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
-            exclamationMark.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
-        }
-        else
+        if (isPaused || Player.inConversation)
         {
             agent.isStopped = true;
+            return;
         }
+        
+        agent.isStopped = false;
+        CheckLineOfSight();
+        DrinkCoffee();
+        UpdatePlayerDetection();
+        UpdateAgentDestination();
+        UpdatePopups();
+
+        coffee.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+        exclamationMark.transform.rotation = Quaternion.Euler(75, 0, transform.rotation.z * -1f);
+    
     }
 
     private void CheckLineOfSight()
@@ -195,7 +197,7 @@ public class Teacher : MonoBehaviour
         
         timeOfLastCoffee = Time.time;
         hasCoffee = true;
-        player.Pause();
+        player.StartConversation();
     }
 
     private void FinishCoffee()
@@ -223,5 +225,15 @@ public class Teacher : MonoBehaviour
     {
         if (other.gameObject.tag == "Sound")
             canHearPlayer = false;
+    }
+
+    void IPause.Pause()
+    {
+        isPaused = true;
+    }
+
+    void IPause.Unpause()
+    {
+        isPaused = false;
     }
 }

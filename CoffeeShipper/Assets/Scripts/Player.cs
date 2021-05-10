@@ -41,10 +41,12 @@ public class Player : MonoBehaviour, IPause
     private Student nearbyStudent;
 
     private Vector3 oldPosition;
-    public static bool isPaused;
-    private  float timeWhenPaused;
+    private bool isPaused;
+    private float timeWhenPaused;
     public float pauseTime;
 
+    public static bool inConversation;
+    
     private bool balloonIsVisible;
     [SerializeField]
     private float balloonDuration;
@@ -68,20 +70,20 @@ public class Player : MonoBehaviour, IPause
     // Update is called once per frame
     void Update()
     {
-        if (!isPaused)
+        if (isPaused || inConversation)
         {
-            CheckInput();
-            Move();
-
-            float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
-            noiseArea.transform.localScale = new Vector3(soundRadius, 0.1f, soundRadius);
-        }
-
-        if(isPaused && Time.time > timeWhenPaused + pauseTime)
-        {
-            isPaused = false;
+            if (Time.time > timeWhenPaused + pauseTime) 
+                inConversation = false;
+            
+            return;
         }
         
+        CheckInput();
+        Move();
+
+        float soundRadius = (transform.position - oldPosition).magnitude * noiseSensitivity;
+        noiseArea.transform.localScale = new Vector3(soundRadius, 0.1f, soundRadius);
+
         if(Time.time > balloonAppearTime + balloonDuration && balloonIsVisible)
         {
             HideBalloon();
@@ -111,7 +113,7 @@ public class Player : MonoBehaviour, IPause
 
         newVelocity.Normalize();
         newVelocity *= moveSpeed;
-        velocity += newVelocity;
+        velocity += newVelocity * Time.deltaTime;
 
         if (nearCoffeeMachine && Input.GetKeyDown(KeyCode.E))
         {
@@ -136,7 +138,6 @@ public class Player : MonoBehaviour, IPause
 
     private void GrabCoffee()
     {
-        Debug.Log("Coffee Grabbed");
         coffeeCount = maxCoffee;
         UpdateCoffeeCups();
 
@@ -211,19 +212,27 @@ public class Player : MonoBehaviour, IPause
         }
     }
 
-    public void Pause()
+    public void StartConversation()
     {
-        isPaused = true;
+        inConversation = true;
         timeWhenPaused = Time.time;
     }
 
-    public void Unpause()
+    void IPause.Pause()
+    {
+        isPaused = true;
+    }
+
+    void IPause.Unpause()
     {
         isPaused = false;
     }
 
     private void Detected(Teacher teacher)
     {
+        if (detectionUI == null)
+            return;
+        
         GameObject newArrow = Instantiate(detectionArrow, detectionUI.transform);
         DetectionArrow arrow = newArrow.GetComponent<DetectionArrow>();
         arrow.parent = this;
@@ -233,13 +242,13 @@ public class Player : MonoBehaviour, IPause
 
     private void Undetected(Teacher teacher)
     {
-        for(int i = 0; i < arrows.Count; i++)
+        for(int i = arrows.Count - 1; i >= 0; i--)
         {
-            if(arrows[i].GetComponent<DetectionArrow>().teacherToPointAt == teacher)
+            GameObject arrow = arrows[i];
+            if (arrow.GetComponent<DetectionArrow>().teacherToPointAt == teacher)
             {
-                Destroy(arrows[i]);
-                arrows.RemoveAt(i);
-                break;
+                arrows.Remove(arrow);
+                Destroy(arrow);
             }
         }
     }

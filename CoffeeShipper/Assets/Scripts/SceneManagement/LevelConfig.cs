@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
+
+#if  UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [CreateAssetMenu(fileName = "LevelConfig", menuName = "ScriptableObjects/LevelConfig")]
 public class LevelConfig : ScriptableObject
@@ -10,6 +13,11 @@ public class LevelConfig : ScriptableObject
     [Serializable]
     public struct Level
     {
+        // Index is unnecessary since we access levels through array index already, but might as well make sure.
+        [SerializeField]
+        private int levelIndex;
+        public int LevelIndex => levelIndex;
+        
         [SerializeField]
         private SceneField scene;
         public SceneField Scene => scene;
@@ -23,6 +31,15 @@ public class LevelConfig : ScriptableObject
     private Level[] levels;
     public Level[] Levels => levels;
 
+    public int GetNextLevelIndex(int currentIndex)
+    {
+        if (currentIndex >= levels.Length - 1)
+            return -1;
+
+        return levels[currentIndex + 1].LevelIndex;
+    }
+
+#if  UNITY_EDITOR
     public void SaveScenesToBuildSettings()
     {
         List<EditorBuildSettingsScene> scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
@@ -38,4 +55,5 @@ public class LevelConfig : ScriptableObject
 
         EditorBuildSettings.scenes = scenes.ToArray();
     }
+#endif
 }
