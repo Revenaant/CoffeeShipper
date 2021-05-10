@@ -620,7 +620,7 @@ MonoBehaviour:
   - {fileID: 1803711568963960}
   - {fileID: 1803710384638434}
   - {fileID: 1803711633084061}
-  moveSpeed: 0.0003
+  moveSpeed: 0.04
   gravity: {x: 0, y: -0.01, z: 0}
   coffeeCount: 0
   pauseTime: 1
